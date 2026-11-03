@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>O tissus d'Hélène</title>
+<meta name="description" content="O tissus d'Hélène, magasin de tissus au mètre et de mercerie à Cholet. Conseils de couturière, grand choix d'étoffes, boutons, rubans et fils.">
+<meta name="theme-color" content="#171c38">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23c8102e'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23f5f3ee' stroke-opacity='.35'/%3E%3Cg fill='%23171c38'%3E%3Ccircle cx='12.5' cy='12.5' r='2'/%3E%3Ccircle cx='19.5' cy='12.5' r='2'/%3E%3Ccircle cx='12.5' cy='19.5' r='2'/%3E%3Ccircle cx='19.5' cy='19.5' r='2'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..800&family=Caveat:wght@500;600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout : un patron de couture qu'on déroule. Scènes épinglées (sticky) + étapes, lignes de coupe entre chapitres, un mètre ruban comme barre de progression. */
+:root{
+  --indigo:#171c38;      /* teinture indigo : fond principal */
+  --indigo-2:#222a52;
+  --indigo-3:#34407a;
+  --lin:#e9e4d8;         /* toile de lin écrue : bandes claires */
+  --lin-2:#d8d0bf;
+  --craie:#f5f3ee;       /* craie de tailleur : texte sur indigo */
+  --craie-dim:#b3b7cc;
+  --encre:#151a30;       /* texte sur lin */
+  --encre-dim:#555a70;
+  --rouge:#c8102e;       /* le mouchoir rouge de Cholet */
+  --metre:#f2c230;       /* le mètre ruban */
+
+  --f-display:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-hand:"Caveat","Bradley Hand","Segoe Print",cursive;
+
+  --t-xs:.75rem; --t-s:.875rem; --t-m:1.0625rem; --t-l:1.25rem; --t-xl:1.75rem;
+  --t-2xl:clamp(2.2rem,4.6vw,3.6rem); --t-3xl:clamp(2.8rem,7vw,6.2rem); --t-hero:clamp(3.2rem,9.4vw,8.6rem);
+
+  --gut:max(16px,env(safe-area-inset-left,0px));
+  --gut-r:max(16px,env(safe-area-inset-right,0px));
+  --head:64px;
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--indigo);color:var(--craie);font:400 var(--t-m)/1.6 var(--f-body);overflow-x:clip;-webkit-font-smoothing:antialiased}
+img,svg,canvas{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-family:var(--f-display);font-weight:500;line-height:1.02;letter-spacing:-.01em;margin:0;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+em{font-style:italic}
+:focus-visible{outline:2px solid var(--metre);outline-offset:3px;border-radius:2px}
+[hidden]{display:none!important}
+.wrap{max-width:1240px;margin-inline:auto;padding-left:var(--gut);padding-right:var(--gut-r)}
+.eyebrow{font:500 var(--t-xs)/1.4 var(--f-mono);letter-spacing:.14em;text-transform:uppercase}
+.mono{font-family:var(--f-mono)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Bandes ---------- */
+.band-lin{background:var(--lin);color:var(--encre)}
+.band-indigo{background:var(--indigo);color:var(--craie)}
+.band-rouge{background:var(--rouge);color:var(--craie)}
+.band-lin .muted{color:var(--encre-dim)}
+.band-indigo .muted,.band-rouge .muted{color:var(--craie-dim)}
+.band-rouge .muted{color:#f6d3d8}
+
+/* ---------- Boutons ---------- */
+.btn{display:inline-flex;align-items:center;gap:.6em;font:600 var(--t-s)/1 var(--f-body);letter-spacing:.02em;text-decoration:none;padding:1em 1.4em;border-radius:999px;border:1.5px solid currentColor;background:transparent;color:inherit;cursor:pointer;transition:background .25s,color .25s,transform .25s var(--ease)}
+.btn:hover{transform:translateY(-2px)}
+.btn-solid{background:var(--craie);color:var(--indigo);border-color:var(--craie)}
+.btn-solid:hover{background:var(--metre);border-color:var(--metre)}
+.btn-rouge{background:var(--rouge);color:var(--craie);border-color:var(--rouge)}
+.btn-rouge:hover{background:#a80d26;border-color:#a80d26}
+.btn svg{width:1.1em;height:1.1em}
+
+/* ---------- En-tête + mètre ruban ---------- */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--indigo)}
+.top{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:50;background:color-mix(in srgb,var(--indigo) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.top-in{height:var(--head);display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:flex;align-items:center;gap:.45rem;text-decoration:none;font-family:var(--f-display);font-size:1.35rem;font-style:italic;white-space:nowrap}
+.logo svg{width:28px;height:28px;flex:none}
+.nav{display:flex;gap:1.6rem;font:500 var(--t-s)/1 var(--f-body)}
+.nav a{text-decoration:none;color:var(--craie-dim);transition:color .2s}
+.nav a:hover{color:var(--craie)}
+.top .btn{padding:.75em 1.15em}
+.tape{position:relative;height:16px;background:
+  linear-gradient(90deg,var(--encre) 0 1px,transparent 1px) 0 100%/40px 9px repeat-x,
+  linear-gradient(90deg,var(--encre) 0 1px,transparent 1px) 0 100%/8px 4px repeat-x,
+  var(--metre);border-top:1px solid rgba(0,0,0,.25)}
+.tape-fill{position:absolute;inset:0 auto 0 0;width:calc(var(--p,0)*100%);background:rgba(200,16,46,.22)}
+.tape-mark{position:absolute;top:-3px;bottom:-3px;left:calc(var(--p,0)*100%);width:2px;background:var(--rouge)}
+.tape-label{position:absolute;top:50%;left:calc(var(--p,0)*100%);transform:translate(8px,-50%);font:500 10px/1 var(--f-mono);color:var(--encre);background:var(--metre);padding:2px 4px;white-space:nowrap}
+.tape-label.flip{transform:translate(calc(-100% - 8px),-50%)}
+@media (max-width:980px){.nav{display:none}}
+@media (max-width:420px){.top .btn span{display:none}.logo{font-size:1.15rem}}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:clip;padding-top:calc(var(--head) + 16px + env(safe-area-inset-top,0px))}
+.hero-in{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,4vw,64px);align-items:center;padding-block:clamp(48px,9vh,120px) clamp(56px,10vh,120px)}
+.hero h1{font-size:var(--t-hero);font-weight:500;line-height:.94}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.hero h1 .ln>span{display:inline-block;animation:rise 1.1s var(--ease) both}
+.hero h1 .ln:nth-child(2)>span{animation-delay:.12s}
+.hero h1 em{font-style:italic;color:var(--metre)}
+.hero .eyebrow{color:var(--metre);display:flex;align-items:center;gap:.8em;margin-bottom:28px}
+.hero .eyebrow::before{content:"";width:36px;height:0;border-top:1.5px dashed currentColor}
+.hero-lead{max-width:34rem;font-size:var(--t-l);line-height:1.55;color:var(--craie-dim);margin-top:28px;animation:fade 1s .5s both}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px;animation:fade 1s .65s both}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:44px;padding-top:22px;border-top:1px solid rgba(245,243,238,.14);font:500 var(--t-xs)/1.4 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--craie-dim);animation:fade 1s .8s both}
+.hero-meta>span{display:inline-flex;align-items:center;gap:.6em}
+.stars{color:var(--metre);letter-spacing:.1em}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--craie-dim)}
+.dot.open{background:#5fd08a;box-shadow:0 0 0 4px rgba(95,208,138,.18)}
+.dot.closed{background:var(--rouge);box-shadow:0 0 0 4px rgba(200,16,46,.25)}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* Nuancier en éventail */
+.fan-wrap{position:relative;height:clamp(340px,46vw,540px)}
+.fan{position:absolute;left:50%;bottom:4%;width:0;height:0}
+.sw{position:absolute;left:calc(var(--w)/-2);bottom:0;width:var(--w);height:calc(var(--w)*1.45);--w:clamp(128px,15vw,210px);transform-origin:50% 100%;transform:rotate(var(--rot));animation:fanOut 1.4s var(--ease) both;animation-delay:calc(.25s + var(--i)*.07s);box-shadow:0 18px 40px rgba(0,0,0,.35);border-radius:3px 3px 0 0}
+.sw .tag{position:absolute;top:10px;left:10px;right:10px;background:var(--craie);color:var(--encre);font:500 10px/1.35 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;padding:6px 8px;border-radius:2px}
+.sw .tag b{display:block;font:italic 500 14px/1.1 var(--f-display);letter-spacing:0;text-transform:none;margin-bottom:2px}
+@keyframes fanOut{from{transform:rotate(0) translateY(30px);opacity:0}to{transform:rotate(var(--rot));opacity:1}}
+.pivot{position:absolute;left:-11px;bottom:-11px;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#d8d2c4 0 30%,#8f8a7e 32% 60%,#5d5a52 62%);z-index:3;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.needle-thread{position:absolute;inset:0;overflow:visible;pointer-events:none;z-index:4}
+.needle-thread path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.4s .9s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (max-width:860px){
+  .hero-in{grid-template-columns:minmax(0,1fr)}
+  .fan-wrap{height:clamp(300px,82vw,420px);order:2}
+  .sw{--w:clamp(110px,30vw,170px)}
+}
+
+/* Pinked edge : ciseaux cranteurs */
+.pinked{-webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%}
+
+/* Motifs de tissus */
+.p-lin{background:repeating-linear-gradient(0deg,rgba(90,70,40,.13) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(255,255,255,.16) 0 1px,transparent 1px 4px),#c9b893}
+.p-denim{background:repeating-linear-gradient(45deg,#2a3768 0 2px,#3c4c88 2px 3px,#25305c 3px 5px)}
+.p-vichy{background:linear-gradient(90deg,rgba(59,79,143,.55) 50%,transparent 0) 0 0/26px 26px,linear-gradient(rgba(59,79,143,.55) 50%,transparent 0) 0 0/26px 26px,#f3efe6}
+.p-velours{background:linear-gradient(90deg,rgba(255,255,255,.08),transparent 40%,rgba(0,0,0,.12)),repeating-linear-gradient(90deg,#6e4128 0 5px,#8a5634 5px 8px,#5e361f 8px 11px)}
+.p-pois{background:radial-gradient(circle,#f3efe6 0 3px,transparent 3.5px) 0 0/20px 20px,radial-gradient(circle,#f3efe6 0 3px,transparent 3.5px) 10px 10px/20px 20px,#1f6e6a}
+.p-wax{background:radial-gradient(circle,#f2c230 0 22%,#c8102e 23% 36%,#171c38 37% 42%,transparent 43%) 0 0/56px 56px,radial-gradient(circle,#f3efe6 0 10%,transparent 11%) 28px 28px/56px 56px,repeating-linear-gradient(45deg,#1d7a4e 0 6px,#15603c 6px 12px)}
+.p-jersey{background:linear-gradient(135deg,#6f7cab 25%,transparent 25%) -5px 0/10px 10px,linear-gradient(225deg,#6f7cab 25%,transparent 25%) -5px 0/10px 10px,#8592c2}
+.p-feutrine{background:linear-gradient(90deg,#c8102e 0 14%,#e8742a 14% 28%,#f2c230 28% 42%,#3f9a5b 42% 57%,#2f6fb5 57% 71%,#6b4aa0 71% 85%,#e58fb3 85%)}
+.p-cholet{background:linear-gradient(90deg,transparent 8%,#f3efe6 8% 11%,transparent 11% 15%,#f3efe6 15% 17%,transparent 17% 83%,#f3efe6 83% 85%,transparent 85% 89%,#f3efe6 89% 92%,transparent 92%),linear-gradient(transparent 8%,#f3efe6 8% 11%,transparent 11% 15%,#f3efe6 15% 17%,transparent 17% 83%,#f3efe6 83% 85%,transparent 85% 89%,#f3efe6 89% 92%,transparent 92%),#c8102e}
+
+/* ---------- Lisière imprimée ---------- */
+.selvage{overflow:hidden;border-block:1px solid var(--lin-2);padding-block:14px}
+.selvage-track{display:flex;width:max-content;animation:marquee 38s linear infinite}
+.selvage-track span{display:inline-flex;align-items:center;gap:18px;padding-right:18px;font:500 12px/1 var(--f-mono);letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+.reg{display:inline-flex;gap:5px}
+.reg i{width:9px;height:9px;border-radius:50%;display:block}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ---------- Titres de chapitre ---------- */
+.chap{display:flex;align-items:baseline;gap:14px;margin-bottom:20px}
+.chap .num{font:italic 500 var(--t-xl)/1 var(--f-display)}
+.chap .eyebrow{opacity:.75}
+.band-indigo .chap .num{color:var(--metre)}
+.band-lin .chap .num,.band-rouge .chap .num{color:inherit}
+.band-lin .chap .num{color:var(--rouge)}
+
+/* ---------- Scrollytelling ---------- */
+.scrolly{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);position:relative}
+.stage{grid-column:2;grid-row:1;position:sticky;top:0;height:100vh;height:100svh;align-self:start;display:grid;place-items:center;padding-top:calc(var(--head) + 16px)}
+.steps{grid-column:1;grid-row:1;position:relative;z-index:2}
+.scrolly.rev .stage{grid-column:1}.scrolly.rev .steps{grid-column:2}
+.step{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding-block:15vh}
+.step-card{max-width:30rem;transition:opacity .5s,transform .6s var(--ease);opacity:.35}
+.step.on .step-card{opacity:1}
+.step-card h2{font-size:var(--t-2xl);margin-bottom:18px}
+.step-card h3{font-size:var(--t-xl);font-style:italic;margin-bottom:12px}
+.step-card p{color:inherit;opacity:.82}
+.step-card .eyebrow{display:block;margin-bottom:14px;opacity:.7}
+@media (max-width:860px){
+  .scrolly,.scrolly.rev{grid-template-columns:minmax(0,1fr)}
+  .stage,.scrolly.rev .stage{grid-column:1;grid-row:1}
+  .steps,.scrolly.rev .steps{grid-column:1;grid-row:1}
+  .step{align-items:flex-end;padding-block:0 12vh}
+  .step-card{opacity:1;padding:22px;border-radius:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .band-indigo .step-card{background:color-mix(in srgb,var(--indigo) 84%,transparent);border:1px solid rgba(245,243,238,.12)}
+  .band-lin .step-card{background:color-mix(in srgb,var(--lin) 88%,transparent);border:1px solid var(--lin-2)}
+  .stage{padding-top:calc(var(--head) + 8px);align-items:start}
+}
+
+/* Chapitre 1 : le fil */
+#fil{--fiber:#f5f3ee}
+.fil-stage{width:min(92%,600px);position:relative}
+.fil-svg{width:100%;height:auto;overflow:visible}
+.fil-svg .wound{fill:var(--fiber);transition:fill .6s}
+#filThread{stroke:var(--fiber);transition:stroke .6s}
+.fiber-name{position:absolute;left:0;right:0;bottom:-2%;text-align:center;font:italic 500 clamp(3rem,8vw,6.5rem)/1 var(--f-display);color:var(--craie);pointer-events:none}
+.fiber-note{display:block;font:500 var(--t-xs)/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--craie-dim);font-style:normal;margin-top:10px}
+.swap{animation:swap .6s var(--ease)}
+@keyframes swap{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (max-width:860px){.fil-stage{width:min(88%,420px);margin-top:4vh}}
+
+/* Chapitre 2 : la trame */
+.loom{position:relative;width:min(80%,calc(100svh - var(--head) - 120px),560px);padding:18px;background:linear-gradient(180deg,#9b7447,#7d5a35);border-radius:4px;box-shadow:0 30px 60px rgba(21,26,48,.25),inset 0 0 0 2px rgba(255,255,255,.08)}
+.loom canvas{width:100%;aspect-ratio:1;background:#10142a;border-radius:1px}
+.loom-lbl{position:absolute;font:500 10px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--encre-dim)}
+.loom-lbl.t{top:-22px;left:18px}.loom-lbl.r{right:-12px;top:18px;writing-mode:vertical-rl;transform:translateX(100%)}
+.loom-name{position:absolute;left:18px;bottom:-34px;font:italic 500 var(--t-xl)/1 var(--f-display);color:var(--encre)}
+@media (max-width:860px){.loom{width:min(84vw,52svh);margin-top:3vh}.loom-lbl.r{display:none}}
+
+/* ---------- Chapitre 3 : rail d'étoffes ---------- */
+.rail{position:relative}
+.rail-sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:clamp(20px,4vh,44px);padding-top:calc(var(--head) + 16px)}
+.rail-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap}
+.rail-head h2{font-size:var(--t-3xl);max-width:14ch}
+.rail-head p{max-width:24rem;color:var(--craie-dim)}
+.track{display:flex;gap:clamp(16px,2.4vw,32px);width:max-content;padding-left:var(--gut);padding-right:var(--gut-r);will-change:transform}
+.bolt{width:clamp(220px,24vw,300px);flex:none;color:var(--craie)}
+.bolt .sw2{height:clamp(170px,28vh,270px);border-radius:3px 3px 0 0;position:relative}
+.bolt .sw2::after{content:"";position:absolute;left:0;right:0;top:0;height:22px;background:linear-gradient(rgba(0,0,0,.18),transparent)}
+.bolt h3{font-size:var(--t-xl);font-style:italic;margin-top:18px}
+.specs{margin:12px 0 0;padding:0;list-style:none;font:400 12px/1.5 var(--f-mono);color:var(--craie-dim);display:grid;gap:4px}
+.specs li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed rgba(245,243,238,.16);padding-bottom:4px}
+.specs li span:last-child{color:var(--craie);text-align:right}
+.rail-bar{height:2px;background:rgba(245,243,238,.14);position:relative}
+.rail-bar i{position:absolute;inset:0 auto 0 0;width:calc(var(--p,0)*100%);background:var(--metre)}
+@media (max-height:640px){.bolt .sw2{height:130px}.rail-head h2{font-size:2.4rem}}
+
+/* ---------- Ligne de coupe ---------- */
+.cut{position:relative;height:28px;margin-block:-14px;z-index:5}
+.cut::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1.5px dashed var(--craie-dim)}
+.cut.on-lin::before{border-color:var(--encre-dim)}
+.cut .sc{position:absolute;top:50%;left:-40px;width:34px;height:34px;transform:translateY(-50%);transition:left 2.2s var(--ease)}
+.cut.in .sc{left:calc(100% - 60px)}
+.cut-lbl{position:absolute;right:var(--gut-r);top:-6px;font:500 10px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--craie-dim)}
+.cut.on-lin .cut-lbl{color:var(--encre-dim)}
+
+/* ---------- Chapitre 4 : mercerie ---------- */
+.merc{padding-block:clamp(80px,14vh,160px) clamp(56px,8vh,96px)}
+.merc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(32px,6vw,96px);align-items:start}
+.merc h2{font-size:var(--t-3xl);margin-bottom:24px}
+.merc .lead{max-width:30rem;font-size:var(--t-l);color:var(--encre-dim)}
+.index{list-style:none;margin:40px 0 0;padding:0;display:grid}
+.index li{display:flex;align-items:baseline;gap:12px;padding-block:12px;border-bottom:1px solid var(--lin-2)}
+.index b{font:italic 500 var(--t-l)/1.2 var(--f-display);white-space:nowrap}
+.index .lead-dots{flex:1;border-bottom:1.5px dotted var(--encre-dim);opacity:.5;transform:translateY(-4px);min-width:16px}
+.index span:last-child{font:400 12px/1.4 var(--f-mono);color:var(--encre-dim);text-align:right;max-width:58%}
+.btn-wall-box{position:relative}
+.btn-wall{display:grid;grid-template-columns:repeat(8,1fr);gap:clamp(6px,1vw,12px);padding:clamp(16px,2.4vw,28px);background:
+  repeating-linear-gradient(90deg,rgba(21,26,48,.06) 0 1px,transparent 1px 25%),#f3efe6;border:1px solid var(--lin-2);border-radius:4px}
+.bt{--c:#c8102e;aspect-ratio:1;border:0;padding:0;border-radius:50%;cursor:pointer;position:relative;transform:rotate(calc(var(--spin,0deg)*var(--k))) scale(var(--sc,1));transition:scale .3s var(--ease),box-shadow .3s;
+  background:
+   radial-gradient(circle at 38% 38%,rgba(0,0,0,.55) 0 7%,transparent 8%),
+   radial-gradient(circle at 62% 38%,rgba(0,0,0,.55) 0 7%,transparent 8%),
+   radial-gradient(circle at 38% 62%,rgba(0,0,0,.55) 0 7%,transparent 8%),
+   radial-gradient(circle at 62% 62%,rgba(0,0,0,.55) 0 7%,transparent 8%),
+   radial-gradient(circle,transparent 0 56%,rgba(0,0,0,.16) 58% 62%,transparent 64%),
+   radial-gradient(circle at 35% 30%,rgba(255,255,255,.35),transparent 55%),var(--c);
+  box-shadow:0 3px 6px rgba(21,26,48,.18)}
+.bt.two{background:
+   radial-gradient(circle at 40% 50%,rgba(0,0,0,.55) 0 8%,transparent 9%),
+   radial-gradient(circle at 60% 50%,rgba(0,0,0,.55) 0 8%,transparent 9%),
+   radial-gradient(circle,transparent 0 56%,rgba(0,0,0,.16) 58% 62%,transparent 64%),
+   radial-gradient(circle at 35% 30%,rgba(255,255,255,.35),transparent 55%),var(--c)}
+.bt:hover{scale:1.12;box-shadow:0 8px 16px rgba(21,26,48,.25)}
+.bt::before,.bt::after{content:"";position:absolute;left:50%;top:50%;width:0;height:2px;background:var(--thread,#f5f3ee);border-radius:2px;transform:translate(-50%,-50%) rotate(45deg);transition:width .35s var(--ease)}
+.bt::after{transform:translate(-50%,-50%) rotate(-45deg)}
+.bt.two::after{display:none}.bt.two::before{transform:translate(-50%,-50%)}
+.bt.sewn::before,.bt.sewn::after{width:34%}
+.bt.two.sewn::before{width:24%}
+.wall-note{display:flex;justify-content:space-between;gap:16px;margin-top:12px;font:500 11px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--encre-dim)}
+.chalk-note{position:absolute;right:-6px;top:-40px;font:600 1.5rem/1 var(--f-hand);color:var(--rouge);transform:rotate(-4deg)}
+@media (max-width:860px){.merc-grid{grid-template-columns:minmax(0,1fr)}.btn-wall{grid-template-columns:repeat(6,1fr)}.chalk-note{right:4px}}
+
+/* Rubans */
+.ribbons{display:grid;gap:10px;padding-block:24px clamp(72px,12vh,140px);overflow:hidden}
+.rb{height:var(--h);display:flex;align-items:center;width:max-content;will-change:transform}
+.rb span{font:500 11px/1 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;padding-right:42px;white-space:nowrap}
+.rb-1{--h:48px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px),var(--rouge);color:var(--craie)}
+.rb-2{--h:26px;background:linear-gradient(180deg,#3c4a8c,#222a52 55%,#34407a);color:var(--craie)}
+.rb-3{--h:38px;background:linear-gradient(90deg,rgba(59,79,143,.55) 50%,transparent 0) 0 0/12px 12px,linear-gradient(rgba(59,79,143,.55) 50%,transparent 0) 0 0/12px 12px,#f3efe6;color:var(--encre)}
+.rb-3 span{background:#f3efe6;padding:4px 10px;margin-right:32px}
+.rb-4{--h:36px;background:var(--metre);color:var(--encre);-webkit-mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/18px 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/18px 51% repeat-x;mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/18px 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/18px 51% repeat-x}
+.rb-5{--h:30px;color:var(--encre);background:
+  linear-gradient(90deg,var(--encre) 0 6px,transparent 6px) 0 5px/11px 1.5px repeat-x,
+  linear-gradient(90deg,var(--encre) 0 6px,transparent 6px) 0 calc(100% - 5px)/11px 1.5px repeat-x,#d9a4b4}
+
+/* ---------- Chapitre 5 : conseils ---------- */
+.conseil{padding-block:clamp(88px,14vh,160px)}
+.conseil-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(40px,6vw,96px);align-items:center}
+.rating{display:flex;align-items:baseline;gap:16px;margin-bottom:40px}
+.rating .big{font:500 clamp(4rem,10vw,8rem)/.8 var(--f-display)}
+.rating .stars{font-size:1.4rem}
+.rating .mono{font-size:12px;color:var(--craie-dim);letter-spacing:.08em;text-transform:uppercase;margin-top:6px;display:block}
+.quotes{display:grid;gap:32px;margin:0}
+.quotes blockquote{margin:0;font:italic 400 clamp(1.6rem,3vw,2.4rem)/1.18 var(--f-display);text-wrap:balance}
+.quotes blockquote::before{content:"« ";color:var(--metre)}
+.quotes blockquote::after{content:" »";color:var(--metre)}
+.quotes figcaption{font:500 var(--t-xs)/1.4 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--craie-dim)}
+.pattern{position:relative;color:var(--craie)}
+.pattern svg{width:100%;height:auto;overflow:visible}
+.tips{position:absolute;inset:16% 14% 14% 18%;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;justify-content:center;gap:clamp(8px,1.6vw,18px);font:500 clamp(1.15rem,2.1vw,1.6rem)/1.1 var(--f-hand);color:var(--craie)}
+.tips li{transform:rotate(-1.5deg)}
+.tips li:nth-child(2n){transform:rotate(1deg);padding-left:6%}
+.tips li::before{content:"✕ ";color:var(--metre);font-size:.8em}
+@media (max-width:860px){.conseil-grid{grid-template-columns:minmax(0,1fr)}.pattern{max-width:520px}}
+
+/* ---------- Calculateur ---------- */
+.calc{padding-block:clamp(80px,13vh,150px)}
+.calc-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,5vw,80px);align-items:start}
+.calc h2{font-size:var(--t-3xl)}
+.calc .lead{margin-top:20px;max-width:28rem;color:var(--encre-dim);font-size:var(--t-l)}
+.calc-card{background:#f3efe6;border:1px solid var(--lin-2);border-radius:6px;padding:clamp(20px,3vw,36px);display:grid;gap:24px}
+.field{display:grid;gap:10px;border:0;margin:0;padding:0;min-width:0}
+.field>label,.field legend{font:500 11px/1.2 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--encre-dim);padding:0;margin-bottom:2px}
+select{appearance:none;-webkit-appearance:none;width:100%;font:500 var(--t-m)/1.2 var(--f-body);color:var(--encre);background:var(--lin) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23151a30' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 16px center;border:1.5px solid var(--lin-2);border-radius:6px;padding:14px 44px 14px 16px;cursor:pointer}
+select:hover{border-color:var(--encre-dim)}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{font:500 var(--t-s)/1 var(--f-body);padding:11px 14px;border:1.5px solid var(--lin-2);border-radius:999px;cursor:pointer;transition:background .2s,border-color .2s,color .2s;font-variant-numeric:tabular-nums}
+.seg label:hover{border-color:var(--encre-dim)}
+.seg input:checked+label{background:var(--encre);border-color:var(--encre);color:var(--craie)}
+.seg input:focus-visible+label{outline:2px solid var(--rouge);outline-offset:2px}
+.check{display:flex;gap:12px;align-items:center;font-size:var(--t-s);cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--rouge);margin:0}
+.result{border-top:1.5px dashed var(--lin-2);padding-top:22px;display:grid;gap:14px}
+.result .row{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.result .m{font:500 clamp(3rem,7vw,5rem)/.9 var(--f-display);font-variant-numeric:tabular-nums}
+.result .m small{font-size:.4em;font-style:italic;margin-left:.15em}
+.result .hint{font:400 12px/1.5 var(--f-mono);color:var(--encre-dim);max-width:16rem;text-align:right}
+.mini-tape{height:22px;border-radius:2px;background:
+  linear-gradient(90deg,var(--encre) 0 1px,transparent 1px) 0 100%/25% 12px repeat-x,
+  linear-gradient(90deg,var(--encre) 0 1px,transparent 1px) 0 100%/2.5% 5px repeat-x,var(--metre);position:relative;overflow:hidden}
+.mini-tape i{position:absolute;inset:0 auto 0 0;width:calc(var(--m,0)*25%);background:rgba(200,16,46,.55);transition:width .5s var(--ease)}
+.mini-scale{display:flex;justify-content:space-between;font:400 10px/1 var(--f-mono);color:var(--encre-dim)}
+@media (max-width:860px){.calc-grid{grid-template-columns:minmax(0,1fr)}.result .hint{text-align:left}}
+
+/* ---------- Visite ---------- */
+.visit{padding-block:clamp(88px,14vh,160px)}
+.visit h2{font-size:clamp(3.4rem,11vw,10rem);line-height:.88;font-weight:500}
+.visit h2 em{display:block}
+.visit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,48px);margin-top:clamp(48px,8vh,88px);border-top:1.5px dashed rgba(245,243,238,.5);padding-top:36px}
+.visit h3{font:500 11px/1.2 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;margin-bottom:18px;color:#f6d3d8}
+.hours{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:var(--t-s)}
+.hours td{padding:7px 0;border-bottom:1px solid rgba(245,243,238,.22)}
+.hours td:last-child{text-align:right;font-family:var(--f-mono);font-size:13px}
+.hours tr.today td{font-weight:600}
+.hours tr.today td:first-child::after{content:" · aujourd'hui";font-weight:400;opacity:.8}
+.status{display:inline-flex;align-items:center;gap:10px;margin-top:16px;font:500 13px/1 var(--f-mono)}
+.visit .dot.closed{background:var(--craie);box-shadow:0 0 0 4px rgba(245,243,238,.25)}
+.info{display:grid;gap:14px;font-size:var(--t-m)}
+.info p{display:flex;gap:12px;align-items:flex-start}
+.info svg{width:20px;height:20px;flex:none;margin-top:3px}
+.visit .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.visit .btn-solid:hover{background:var(--indigo);color:var(--craie);border-color:var(--indigo)}
+.nl{display:grid;gap:12px}
+.nl p{color:#f6d3d8}
+.nl-row{display:flex;gap:8px;flex-wrap:wrap}
+.nl input{flex:1 1 180px;min-width:0;font:500 var(--t-m)/1.2 var(--f-body);color:var(--craie);background:rgba(0,0,0,.14);border:1.5px solid rgba(245,243,238,.45);border-radius:999px;padding:14px 18px}
+.nl input::placeholder{color:#f6d3d8;opacity:.8}
+.nl input:focus{outline:none;border-color:var(--craie)}
+.nl-ok{font:500 13px/1.5 var(--f-mono)}
+@media (max-width:980px){.visit-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Pied ---------- */
+.foot{padding-block:clamp(56px,10vh,110px) calc(36px + env(safe-area-inset-bottom,0px))}
+.foot-big{font:italic 500 clamp(3rem,12.5vw,12rem)/.9 var(--f-display);display:flex;align-items:center;gap:.12em;letter-spacing:-.02em}
+.foot-big svg{width:.82em;height:.82em;flex:none}
+.foot-row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:40px;padding-top:20px;border-top:1px solid rgba(245,243,238,.14);font:400 12px/1.6 var(--f-mono);color:var(--craie-dim);letter-spacing:.04em}
+
+/* ---------- Apparition ---------- */
+.js .rv{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.js .rv.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .selvage-track{animation:none}
+  .needle-thread path{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<!-- Logo : le « O » est un bouton à quatre trous -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-bouton" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#c8102e"/><circle cx="16" cy="16" r="11" fill="none" stroke="#f5f3ee" stroke-opacity=".35"/><g fill="#171c38"><circle cx="12.5" cy="12.5" r="2"/><circle cx="19.5" cy="12.5" r="2"/><circle cx="12.5" cy="19.5" r="2"/><circle cx="19.5" cy="19.5" r="2"/></g><path d="M12.5 12.5l7 7M19.5 12.5l-7 7" stroke="#f5f3ee" stroke-width="1.3"/></symbol>
+    <symbol id="i-ciseaux" viewBox="0 0 34 34"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="9" r="5"/><circle cx="7" cy="25" r="5"/><path d="M11 12l20 10M11 22l20-10"/></g></symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="logo" href="#top" aria-label="O tissus d'Hélène, retour en haut"><svg aria-hidden="true"><use href="#i-bouton"/></svg>tissus d'Hélène</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#fil">Le fil</a><a href="#trame">La trame</a><a href="#etoffes">Les étoffes</a><a href="#mercerie">La mercerie</a><a href="#conseils">Les conseils</a><a href="#visite">La boutique</a>
+    </nav>
+    <a class="btn btn-solid" href="#visite"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" fill="currentColor"/></svg><span>Venir en boutique</span></a>
+  </div>
+  <div class="tape" id="tape" aria-hidden="true"><div class="tape-fill"></div><div class="tape-mark"></div><div class="tape-label" id="tapeLabel">0 cm</div></div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero band-indigo" aria-labelledby="h-hero">
+  <div class="wrap hero-in">
+    <div>
+      <p class="eyebrow">Tissus au mètre &amp; mercerie · Cholet</p>
+      <h1 id="h-hero"><span class="ln"><span>Tout commence</span></span><span class="ln"><span>par <em>un fil.</em></span></span></h1>
+      <p class="hero-lead">Des étoffes choisies, une mercerie complète et une équipe de couturières qui prend le temps. Chez O tissus d'Hélène, votre projet repart avec le bon tissu et les bons conseils.</p>
+      <div class="hero-cta">
+        <a class="btn btn-solid" href="#fil">Dérouler l'histoire <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16m0 0l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
+        <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=O+tissus+d%27H%C3%A9l%C3%A8ne+Cholet" target="_blank" rel="noopener">Itinéraire</a>
+      </div>
+      <div class="hero-meta">
+        <span><span class="stars" aria-hidden="true">★★★★½</span> 4,5 / 5 · 125 avis Google</span>
+        <span><i class="dot js-dot"></i><span class="js-status">Ouvre à 09:45</span></span>
+        <span>Accessible en fauteuil roulant</span>
+      </div>
+    </div>
+
+    <div class="fan-wrap" aria-hidden="true">
+      <div class="fan">
+        <div class="sw pinked p-feutrine" style="--i:0;--rot:-33deg"><div class="tag"><b>Feutrine</b>90 cm</div></div>
+        <div class="sw pinked p-velours" style="--i:1;--rot:-20deg"><div class="tag"><b>Velours côtelé</b>140 cm</div></div>
+        <div class="sw pinked p-denim" style="--i:2;--rot:-7deg"><div class="tag"><b>Denim</b>145 cm</div></div>
+        <div class="sw pinked p-pois" style="--i:3;--rot:6deg"><div class="tag"><b>Popeline à pois</b>145 cm</div></div>
+        <div class="sw pinked p-lin" style="--i:4;--rot:19deg"><div class="tag"><b>Lin lavé</b>140 cm</div></div>
+        <div class="sw pinked p-cholet" style="--i:5;--rot:32deg"><div class="tag"><b>Rouge Cholet</b>150 cm</div></div>
+        <div class="pivot"></div>
+      </div>
+      <svg class="needle-thread" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet">
+        <path d="M352 70 C 300 150, 340 250, 250 300 S 80 360, 60 460 S 120 600, 20 700" fill="none" stroke="#c8102e" stroke-width="2.4" stroke-linecap="round" pathLength="1"/>
+        <g transform="translate(352 70) rotate(38)">
+          <rect x="-2.6" y="-60" width="5.2" height="96" rx="2.6" fill="#d9d6ce"/>
+          <path d="M-2.6 36 L0 52 L2.6 36z" fill="#d9d6ce"/>
+          <rect x="-1" y="-54" width="2" height="12" rx="1" fill="#171c38"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- Lisière imprimée -->
+<div class="selvage band-lin" aria-hidden="true">
+  <div class="selvage-track">
+    <span>O tissus d'Hélène <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i> Cholet · Maine-et-Loire <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i> Tissus au mètre <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i> Mercerie · Boutons · Rubans <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i> Laize 140 cm · 100 % coton <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i></span>
+    <span>O tissus d'Hélène <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i> Cholet · Maine-et-Loire <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i> Tissus au mètre <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i> Mercerie · Boutons · Rubans <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i> Laize 140 cm · 100 % coton <i class="reg"><i style="background:#c8102e"></i><i style="background:#f2c230"></i><i style="background:#34407a"></i><i style="background:#1f6e6a"></i><i style="background:#151a30"></i></i></span>
+  </div>
+</div>
+
+<!-- ================= 1. LE FIL ================= -->
+<section id="fil" class="band-indigo" aria-labelledby="h-fil">
+  <div class="scrolly">
+    <div class="stage" aria-hidden="true">
+      <div class="fil-stage">
+        <svg class="fil-svg" viewBox="0 0 600 560">
+          <path id="filThread" d="M200 160 L640 300" fill="none" stroke-width="2.6" stroke-linecap="round"/>
+          <g id="spool">
+            <circle cx="200" cy="290" r="150" fill="#a8824f"/>
+            <circle cx="200" cy="290" r="150" fill="none" stroke="#7d5a35" stroke-width="3"/>
+            <circle class="wound" cx="200" cy="290" r="128"/>
+            <g fill="none" stroke="#000" stroke-opacity=".07" stroke-width="1.5">
+              <circle cx="200" cy="290" r="120"/><circle cx="200" cy="290" r="110"/><circle cx="200" cy="290" r="100"/><circle cx="200" cy="290" r="90"/><circle cx="200" cy="290" r="80"/><circle cx="200" cy="290" r="70"/><circle cx="200" cy="290" r="60"/>
+            </g>
+            <path d="M120 200 A 120 120 0 0 1 250 180" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="200" cy="290" r="50" fill="#b8925d"/>
+            <circle cx="200" cy="290" r="50" fill="none" stroke="#7d5a35" stroke-width="2"/>
+            <circle cx="200" cy="290" r="16" fill="#171c38"/>
+            <circle cx="200" cy="256" r="4" fill="#7d5a35"/><circle cx="229" cy="307" r="4" fill="#7d5a35"/><circle cx="171" cy="307" r="4" fill="#7d5a35"/>
+            <rect x="196" y="138" width="8" height="18" rx="2" fill="#5e4326"/>
+          </g>
+        </svg>
+        <div class="fiber-name"><span id="fiberName">Coton</span><em class="fiber-note" id="fiberNote">Fibre végétale · graine du cotonnier</em></div>
+      </div>
+    </div>
+    <div class="steps wrap">
+      <div class="step"><div class="step-card">
+        <div class="chap"><span class="num">I</span><span class="eyebrow">Le fil</span></div>
+        <h2 id="h-fil">Avant le tissu, il y a la fibre.</h2>
+        <p><strong>Le coton</strong> est doux, respirant et facile à coudre. C'est la fibre des premiers projets et des vêtements de tous les jours.</p>
+      </div></div>
+      <div class="step"><div class="step-card">
+        <h3>Le lin</h3>
+        <p>Il se froisse avec élégance et gagne en souplesse à chaque lavage. La France en est le premier producteur mondial. Lavez-le avant la coupe.</p>
+      </div></div>
+      <div class="step"><div class="step-card">
+        <h3>La laine</h3>
+        <p>Chaude et vivante, elle se travaille au fer vapeur. Pour les manteaux, les jupes d'hiver et les pelotes à tricoter.</p>
+      </div></div>
+      <div class="step"><div class="step-card">
+        <h3>La soie</h3>
+        <p>Fluide et lumineuse. Elle demande une aiguille fine, des épingles neuves et un peu de patience. Le résultat en vaut la peine.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<div class="cut" aria-hidden="true"><svg class="sc" style="color:#f5f3ee"><use href="#i-ciseaux"/></svg><span class="cut-lbl">Couper ici</span></div>
+
+<!-- ================= 2. LA TRAME ================= -->
+<section id="trame" class="band-lin" aria-labelledby="h-trame">
+  <div class="scrolly rev">
+    <div class="stage" aria-hidden="true">
+      <div class="loom">
+        <span class="loom-lbl t">← trame →</span>
+        <span class="loom-lbl r">↑ chaîne ↓</span>
+        <canvas id="weave" width="560" height="560"></canvas>
+        <span class="loom-name" id="weaveName">Toile</span>
+      </div>
+    </div>
+    <div class="steps wrap">
+      <div class="step"><div class="step-card">
+        <div class="chap"><span class="num">II</span><span class="eyebrow">La trame</span></div>
+        <h2 id="h-trame">Un fil dessus, un fil dessous.</h2>
+        <p><strong>La toile</strong> est l'armure la plus simple. Le fil de trame passe alternativement sur et sous chaque fil de chaîne. On la retrouve dans le lin, la popeline et le coton à patchwork.</p>
+      </div></div>
+      <div class="step"><div class="step-card">
+        <h3>Le sergé</h3>
+        <p>La trame saute plusieurs fils de chaîne et se décale d'un cran à chaque rang. Cela dessine la diagonale qu'on reconnaît sur le denim.</p>
+      </div></div>
+      <div class="step"><div class="step-card">
+        <h3>Le vichy</h3>
+        <p>Une toile tissée avec des fils de deux couleurs, en alternance. Les carreaux naissent du croisement, sans aucune impression.</p>
+      </div></div>
+      <div class="step"><div class="step-card">
+        <h3>Le mouchoir de Cholet</h3>
+        <p>Rouge, bordé de blanc. Cholet s'est construite sur le textile, et ce carré en est resté l'emblème. Une boutique de tissus ici, c'est un peu de cette histoire qui continue.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3. LES ÉTOFFES ================= -->
+<section id="etoffes" class="rail band-indigo" aria-labelledby="h-etoffes">
+  <div class="rail-sticky">
+    <div class="wrap rail-head">
+      <div>
+        <div class="chap"><span class="num">III</span><span class="eyebrow">Les étoffes</span></div>
+        <h2 id="h-etoffes">Le bon tissu, <em>au mètre.</em></h2>
+      </div>
+      <p>Un exemple du choix en rayon. Chaque étoffe se touche, se compare et se coupe à la longueur dont vous avez besoin.</p>
+    </div>
+    <div class="track" id="track">
+      <article class="bolt"><div class="sw2 pinked p-lin"></div><h3>Lin lavé</h3><ul class="specs"><li><span>Composition</span><span>100 % lin</span></li><li><span>Laize</span><span>140 cm</span></li><li><span>Grammage</span><span>180 g/m²</span></li><li><span>Pour</span><span>chemises, robes, linge</span></li></ul></article>
+      <article class="bolt"><div class="sw2 pinked p-denim"></div><h3>Denim stretch</h3><ul class="specs"><li><span>Composition</span><span>98 % coton, 2 % élasthanne</span></li><li><span>Laize</span><span>145 cm</span></li><li><span>Grammage</span><span>320 g/m²</span></li><li><span>Pour</span><span>jeans, vestes, sacs</span></li></ul></article>
+      <article class="bolt"><div class="sw2 pinked p-vichy"></div><h3>Vichy</h3><ul class="specs"><li><span>Composition</span><span>100 % coton</span></li><li><span>Laize</span><span>150 cm</span></li><li><span>Grammage</span><span>110 g/m²</span></li><li><span>Pour</span><span>nappes, robes d'été</span></li></ul></article>
+      <article class="bolt"><div class="sw2 pinked p-velours"></div><h3>Velours côtelé</h3><ul class="specs"><li><span>Composition</span><span>100 % coton</span></li><li><span>Laize</span><span>140 cm</span></li><li><span>Grammage</span><span>290 g/m²</span></li><li><span>Pour</span><span>pantalons, salopettes</span></li></ul></article>
+      <article class="bolt"><div class="sw2 pinked p-pois"></div><h3>Popeline à pois</h3><ul class="specs"><li><span>Composition</span><span>100 % coton</span></li><li><span>Laize</span><span>145 cm</span></li><li><span>Grammage</span><span>115 g/m²</span></li><li><span>Pour</span><span>chemisiers, enfants</span></li></ul></article>
+      <article class="bolt"><div class="sw2 pinked p-wax"></div><h3>Wax</h3><ul class="specs"><li><span>Composition</span><span>100 % coton</span></li><li><span>Laize</span><span>115 cm</span></li><li><span>Grammage</span><span>140 g/m²</span></li><li><span>Pour</span><span>jupes, coussins, sacs</span></li></ul></article>
+      <article class="bolt"><div class="sw2 pinked p-jersey"></div><h3>Jersey</h3><ul class="specs"><li><span>Composition</span><span>95 % coton, 5 % élasthanne</span></li><li><span>Laize</span><span>150 cm</span></li><li><span>Grammage</span><span>200 g/m²</span></li><li><span>Pour</span><span>tee-shirts, robes</span></li></ul></article>
+      <article class="bolt"><div class="sw2 pinked p-feutrine"></div><h3>Feutrine</h3><ul class="specs"><li><span>Épaisseur</span><span>1 mm</span></li><li><span>Laize</span><span>90 cm</span></li><li><span>Coloris</span><span>tout le nuancier</span></li><li><span>Pour</span><span>déco, loisirs créatifs</span></li></ul></article>
+    </div>
+    <div class="wrap"><div class="rail-bar" id="railBar"><i></i></div></div>
+  </div>
+</section>
+
+<div class="cut on-lin" aria-hidden="true" style="background:linear-gradient(var(--indigo) 50%,var(--lin) 50%)"><svg class="sc" style="color:#151a30"><use href="#i-ciseaux"/></svg><span class="cut-lbl">Couper ici</span></div>
+
+<!-- ================= 4. LA MERCERIE ================= -->
+<section id="mercerie" class="band-lin" aria-labelledby="h-merc">
+  <div class="wrap merc">
+    <div class="merc-grid">
+      <div class="rv">
+        <div class="chap"><span class="num">IV</span><span class="eyebrow">La mercerie</span></div>
+        <h2 id="h-merc">Tout ce qui fait <em>la finition.</em></h2>
+        <p class="lead">Le bouton qui change une veste, le ruban qui termine un ourlet, le fil exactement du bon ton. La mercerie se choisit sur place, tissu en main.</p>
+        <ul class="index">
+          <li><b>Boutons</b><span class="lead-dots"></span><span>nacre, bois, métal, fantaisie, pression</span></li>
+          <li><b>Rubans &amp; galons</b><span class="lead-dots"></span><span>gros-grain, satin, croquet, dentelle</span></li>
+          <li><b>Fils à coudre</b><span class="lead-dots"></span><span>polyester, coton, à surjeter</span></li>
+          <li><b>Fermetures</b><span class="lead-dots"></span><span>invisibles, séparables, métal</span></li>
+          <li><b>Laines &amp; tricot</b><span class="lead-dots"></span><span>pelotes, aiguilles, crochets</span></li>
+          <li><b>Biais &amp; élastiques</b><span class="lead-dots"></span><span>de 5 à 40 mm</span></li>
+        </ul>
+      </div>
+      <div class="btn-wall-box rv">
+        <span class="chalk-note" aria-hidden="true">cousez-en un !</span>
+        <div class="btn-wall" id="btnWall" role="group" aria-label="Mur de boutons : cliquez pour coudre un bouton"></div>
+        <div class="wall-note"><span id="sewCount">0 bouton cousu</span><span>Ø 12 à 28 mm</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="ribbons" aria-hidden="true">
+    <div class="rb rb-1" data-dir="-1"></div>
+    <div class="rb rb-2" data-dir="1"></div>
+    <div class="rb rb-3" data-dir="-1"></div>
+    <div class="rb rb-4" data-dir="1"></div>
+    <div class="rb rb-5" data-dir="-1"></div>
+  </div>
+</section>
+
+<!-- ================= 5. LES CONSEILS ================= -->
+<section id="conseils" class="band-indigo" aria-labelledby="h-conseils">
+  <div class="wrap conseil">
+    <div class="conseil-grid">
+      <div class="rv">
+        <div class="chap"><span class="num">V</span><span class="eyebrow">Les conseils</span></div>
+        <h2 id="h-conseils" class="sr">Ce que disent les clientes et clients</h2>
+        <div class="rating">
+          <span class="big">4,5</span>
+          <span><span class="stars" aria-label="4,5 étoiles sur 5">★★★★½</span><span class="mono">125 avis Google</span></span>
+        </div>
+        <figure class="quotes">
+          <blockquote>Une équipe professionnelle qui donne d'excellents conseils.</blockquote>
+          <blockquote>Un grand choix de tissus et de mercerie disponible sur place.</blockquote>
+          <figcaption>Ce que les avis Google retiennent de la boutique</figcaption>
+        </figure>
+      </div>
+      <div class="pattern rv" aria-label="Pièce de patron annotée à la craie">
+        <svg viewBox="0 0 500 560" aria-hidden="true">
+          <path d="M60 40 L300 40 Q 330 90 400 96 L440 100 L470 520 L40 520 Z" fill="rgba(245,243,238,.05)" stroke="#f5f3ee" stroke-width="2"/>
+          <path d="M78 58 L292 58 Q 320 106 396 114 L424 118 L452 502 L58 502 Z" fill="none" stroke="#f5f3ee" stroke-opacity=".45" stroke-width="1.2" stroke-dasharray="7 6"/>
+          <path d="M140 40 l-6 -12 h12z M380 92 l6 -12 l6 13z M40 300 l-12 -6 v12z" fill="#f5f3ee"/>
+          <g stroke="#f2c230" stroke-width="2" fill="#f2c230"><path d="M24 120 V470" fill="none"/><path d="M24 112 l-6 14 h12z"/><path d="M24 478 l-6 -14 h12z"/></g>
+          <text x="10" y="300" transform="rotate(-90 10 300)" fill="#f2c230" font-family="IBM Plex Mono, monospace" font-size="11" letter-spacing="2" text-anchor="middle">DROIT FIL</text>
+          <text x="255" y="545" fill="#f5f3ee" fill-opacity=".7" font-family="IBM Plex Mono, monospace" font-size="11" letter-spacing="2" text-anchor="middle">DEVANT · COUPER 1 FOIS AU PLI</text>
+        </svg>
+        <ul class="tips">
+          <li>Lavez le lin et le coton avant de couper : ils rétrécissent.</li>
+          <li>Jersey : aiguille stretch et point zigzag.</li>
+          <li>Velours : toutes les pièces dans le sens du poil.</li>
+          <li>Tissu à raccords ? Prévoyez 10 cm de plus.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cut on-lin" aria-hidden="true" style="background:linear-gradient(var(--indigo) 50%,var(--lin) 50%)"><svg class="sc" style="color:#151a30"><use href="#i-ciseaux"/></svg><span class="cut-lbl">Couper ici</span></div>
+
+<!-- ================= CALCULATEUR ================= -->
+<section id="metrage" class="band-lin" aria-labelledby="h-calc">
+  <div class="wrap calc">
+    <div class="calc-grid">
+      <div class="rv">
+        <div class="chap"><span class="num">VI</span><span class="eyebrow">Le métrage</span></div>
+        <h2 id="h-calc">Combien de mètres <em>pour votre projet ?</em></h2>
+        <p class="lead">Une première estimation avant de venir. En boutique, l'équipe la vérifie avec votre patron.</p>
+      </div>
+      <form class="calc-card rv" id="calc" onsubmit="return false">
+        <div class="field">
+          <label for="calcProjet">Projet</label>
+          <select id="calcProjet">
+            <option value="jupe-droite">Jupe droite</option>
+            <option value="jupe-evasee">Jupe évasée</option>
+            <option value="robe" selected>Robe d'été</option>
+            <option value="chemise">Chemise</option>
+            <option value="pantalon">Pantalon</option>
+            <option value="veste">Veste</option>
+            <option value="coussin">Housse de coussin 40 × 40</option>
+            <option value="rideau">Rideau 140 × 250 (un panneau)</option>
+          </select>
+        </div>
+        <fieldset class="field" id="fsTaille">
+          <legend>Taille</legend>
+          <div class="seg">
+            <input type="radio" name="taille" id="t1" value="34-36"><label for="t1">34–36</label>
+            <input type="radio" name="taille" id="t2" value="38-40" checked><label for="t2">38–40</label>
+            <input type="radio" name="taille" id="t3" value="42-44"><label for="t3">42–44</label>
+            <input type="radio" name="taille" id="t4" value="46-48"><label for="t4">46–48</label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Laize du tissu</legend>
+          <div class="seg">
+            <input type="radio" name="laize" id="l1" value="110"><label for="l1">110–115 cm</label>
+            <input type="radio" name="laize" id="l2" value="140" checked><label for="l2">140–150 cm</label>
+          </div>
+        </fieldset>
+        <label class="check" for="raccord"><input type="checkbox" id="raccord"> Motif à raccorder (carreaux, rayures, grand imprimé)</label>
+        <div class="result" aria-live="polite">
+          <div class="row"><span class="m" id="calcOut">2,2<small>m</small></span><span class="hint" id="calcHint">Estimation pour une taille 38–40, en laize 140–150 cm.</span></div>
+          <div class="mini-tape" id="miniTape"><i></i></div>
+          <div class="mini-scale" aria-hidden="true"><span>0</span><span>1 m</span><span>2 m</span><span>3 m</span><span>4 m</span></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VISITE ================= -->
+<section id="visite" class="band-rouge" aria-labelledby="h-visite">
+  <div class="wrap visit">
+    <div class="chap"><span class="num">VII</span><span class="eyebrow">La boutique</span></div>
+    <h2 id="h-visite" class="rv">Passez <em>nous voir.</em></h2>
+    <div class="visit-grid">
+      <div class="rv">
+        <h3>Horaires</h3>
+        <table class="hours" id="hours"><tbody></tbody></table>
+        <span class="status"><i class="dot js-dot"></i><span class="js-status">Ouvre à 09:45</span></span>
+      </div>
+      <div class="rv">
+        <h3>Sur place</h3>
+        <div class="info">
+          <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" fill="currentColor"/></svg>Cholet, Maine-et-Loire</p>
+          <p><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.5" r="2" fill="currentColor"/><path d="M12 7v6h5l2 6M12 10h5M9 11a5 5 0 105.8 7.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Entrée accessible en fauteuil roulant</p>
+          <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 7v12h12V7M9 7a3 3 0 016 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Tissus au mètre, mercerie, laines</p>
+          <div class="btns">
+            <a class="btn btn-solid" href="https://www.google.com/maps/search/?api=1&amp;query=O+tissus+d%27H%C3%A9l%C3%A8ne+Cholet" target="_blank" rel="noopener">Itinéraire</a>
+            <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=O+tissus+d%27H%C3%A9l%C3%A8ne+Cholet" target="_blank" rel="noopener">Lire les 125 avis</a>
+          </div>
+        </div>
+      </div>
+      <form class="nl rv" id="nl" novalidate>
+        <h3>Les arrivages</h3>
+        <p>Nouvelles collections, coupons et réassorts : recevez un message quand ça arrive en rayon.</p>
+        <div class="nl-row">
+          <label class="sr" for="nlEmail">Adresse e-mail</label>
+          <input type="email" id="nlEmail" placeholder="votre@email.fr" required autocomplete="email">
+          <button class="btn btn-solid" type="submit">S'inscrire</button>
+        </div>
+        <p class="nl-ok" id="nlMsg" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot band-indigo">
+  <div class="wrap">
+    <div class="foot-big" aria-label="O tissus d'Hélène"><svg aria-hidden="true"><use href="#i-bouton"/></svg>tissus d'Hélène</div>
+    <div class="foot-row">
+      <span>Magasin de tissus &amp; mercerie · Cholet</span>
+      <span>Maquette de démonstration · contenus à valider</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  document.documentElement.classList.add('js');
+
+  // Progression dans une section épinglée : 0 en haut, 1 quand sa fin touche le bas de l'écran.
+  const prog = el => { const r = el.getBoundingClientRect(); const t = r.height - innerHeight; return t > 0 ? clamp(-r.top / t) : 0; };
+  // Passage d'un bloc dans l'écran : 0 quand il entre en bas, 1 quand il sort en haut.
+  const pass = el => { const r = el.getBoundingClientRect(); return clamp((innerHeight - r.top) / (innerHeight + r.height)); };
+
+  /* ---------- Mètre ruban ---------- */
+  const tape = $('#tape'), tapeLabel = $('#tapeLabel');
+  function updTape() {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const p = max > 0 ? clamp(scrollY / max) : 0;
+    tape.style.setProperty('--p', p);
+    tapeLabel.textContent = Math.round(p * 150) + ' cm';
+    tapeLabel.classList.toggle('flip', p > .9);
+  }
+
+  /* ---------- I. Le fil ---------- */
+  const fil = $('#fil'), filSteps = $$('#fil .step'), spool = $('#spool'), thread = $('#filThread');
+  const fiberName = $('#fiberName'), fiberNote = $('#fiberNote');
+  const fibers = [
+    { n: 'Coton', d: 'Fibre végétale · graine du cotonnier', c: '#f5f3ee' },
+    { n: 'Lin', d: 'Fibre végétale · tige du lin', c: '#cdb991' },
+    { n: 'Laine', d: 'Fibre animale · toison du mouton', c: '#9aa7d6' },
+    { n: 'Soie', d: 'Fibre animale · cocon du ver à soie', c: '#e0546a' }
+  ];
+  let filIdx = -1;
+  function updFil() {
+    const p = prog(fil), n = fibers.length, i = Math.min(n - 1, Math.floor(p * n));
+    if (i !== filIdx) {
+      filIdx = i;
+      fil.style.setProperty('--fiber', fibers[i].c);
+      fiberName.textContent = fibers[i].n; fiberNote.textContent = fibers[i].d;
+      fiberName.parentElement.classList.remove('swap'); void fiberName.offsetWidth; fiberName.parentElement.classList.add('swap');
+      filSteps.forEach((s, k) => s.classList.toggle('on', k === i));
+    }
+    spool.setAttribute('transform', `rotate(${p * 1440} 200 290)`);
+    // Le fil se déroule depuis le haut de la bobine, avec une ondulation qui suit le défilement.
+    const ph = p * 40; let d = 'M200 162';
+    for (let x = 210; x <= 660; x += 10) {
+      const t = (x - 200) / 460;
+      d += ` L${x} ${(162 + t * 150 + Math.sin(x / 38 - ph) * 26 * t).toFixed(1)}`;
+    }
+    thread.setAttribute('d', d);
+  }
+
+  /* ---------- II. La trame (métier à tisser) ---------- */
+  const trame = $('#trame'), trameSteps = $$('#trame .step'), cv = $('#weave'), ctx = cv.getContext('2d'), weaveName = $('#weaveName');
+  const N = 24, ECRU = '#f3efe6';
+  const edge = k => { const d = Math.min(k, N - 1 - k); return d === 1 || d === 3; };
+  const pats = [
+    { n: 'Toile', up: (i, j) => (i + j) % 2 === 0, warp: () => '#d8ceb9', weft: () => '#b9ab90' },
+    { n: 'Sergé', up: (i, j) => (i + j) % 4 !== 0, warp: () => '#2d3c72', weft: () => '#e9e4d8' },
+    { n: 'Vichy', up: (i, j) => (i + j) % 2 === 0, warp: i => Math.floor(i / 3) % 2 ? ECRU : '#3b4f8f', weft: j => Math.floor(j / 3) % 2 ? ECRU : '#3b4f8f' },
+    { n: 'Mouchoir de Cholet', up: (i, j) => (i + j) % 2 === 0, warp: i => edge(i) ? ECRU : '#c8102e', weft: j => edge(j) ? ECRU : '#c8102e' }
+  ];
+  let weaveKey = '';
+  function drawWeave(pi, done) {
+    const P = pats[pi], s = cv.width / N, g = Math.max(1, s * .13);
+    ctx.fillStyle = '#10142a'; ctx.fillRect(0, 0, cv.width, cv.height);
+    for (let j = 0; j < N; j++) {
+      const woven = (N - 1 - j) < Math.floor(done);
+      for (let i = 0; i < N; i++) {
+        const x = i * s, y = j * s;
+        if (!woven) { ctx.globalAlpha = .5; ctx.fillStyle = P.warp(i); ctx.fillRect(x + s * .32, y, s * .36, s); ctx.globalAlpha = 1; continue; }
+        if (P.up(i, j)) {
+          ctx.fillStyle = P.warp(i); ctx.fillRect(x + g, y, s - 2 * g, s);
+          ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.fillRect(x + g, y, (s - 2 * g) * .35, s);
+          ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(x + g, y + s - g, s - 2 * g, g);
+        } else {
+          ctx.fillStyle = P.weft(j); ctx.fillRect(x, y + g, s, s - 2 * g);
+          ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.fillRect(x, y + g, s, (s - 2 * g) * .35);
+          ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(x + s - g, y + g, g, s - 2 * g);
+        }
+      }
+    }
+    if (done < N) { // la navette sur le rang en cours
+      const y = (N - 1 - Math.floor(done)) * s + s / 2, w = cv.width * (done % 1);
+      ctx.fillStyle = '#f2c230'; ctx.fillRect(0, y - 1.5, w, 3);
+      ctx.fillStyle = '#7d5a35'; ctx.fillRect(Math.max(0, w - s * 1.6), y - s * .3, s * 1.6, s * .6);
+    }
+  }
+  function sizeWeave() {
+    const px = Math.round(cv.clientWidth * Math.min(2, devicePixelRatio || 1) / N) * N;
+    if (px && cv.width !== px) { cv.width = cv.height = px; weaveKey = ''; }
+  }
+  let trameIdx = -1;
+  function updTrame() {
+    const p = prog(trame), n = pats.length, f = p * n, i = Math.min(n - 1, Math.floor(f));
+    const local = i === n - 1 && p >= 1 ? 1 : f - i;
+    const done = clamp(local / .7) * N, key = i + ':' + Math.floor(done * 4);
+    if (i !== trameIdx) {
+      trameIdx = i; weaveName.textContent = pats[i].n;
+      weaveName.classList.remove('swap'); void weaveName.offsetWidth; weaveName.classList.add('swap');
+      trameSteps.forEach((s, k) => s.classList.toggle('on', k === i));
+    }
+    if (key !== weaveKey) { weaveKey = key; drawWeave(i, done); }
+  }
+
+  /* ---------- III. Rail des étoffes ---------- */
+  const rail = $('#etoffes'), track = $('#track'), railBar = $('#railBar');
+  const railDist = () => Math.max(0, track.scrollWidth - innerWidth);
+  function sizeRail() { rail.style.height = (railDist() + innerHeight * 1.15) + 'px'; }
+  function updRail() {
+    const p = prog(rail);
+    track.style.transform = `translate3d(${-p * railDist()}px,0,0)`;
+    railBar.style.setProperty('--p', p);
+  }
+
+  /* ---------- IV. Mur de boutons ---------- */
+  const wall = $('#btnWall'), sewCount = $('#sewCount');
+  const colors = ['#c8102e', '#f2c230', '#171c38', '#f5f3ee', '#2f6fb5', '#3f9a5b', '#8a5634', '#e58fb3', '#d9cfbd', '#1f6e6a', '#6b4aa0', '#e8742a', '#34407a', '#b9ab90'];
+  const names = ['rouge', 'jaune', 'indigo', 'blanc', 'bleu', 'vert', 'bois', 'rose', 'nacre', 'canard', 'violet', 'orange', 'marine', 'lin'];
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280; // aléatoire stable : le mur est identique à chaque visite
+  const count = matchMedia('(max-width:860px)').matches ? 36 : 48;
+  for (let k = 0; k < count; k++) {
+    const ci = Math.floor(rnd() * colors.length), b = document.createElement('button');
+    b.type = 'button'; b.className = 'bt' + (rnd() < .35 ? ' two' : '');
+    b.style.setProperty('--c', colors[ci]);
+    b.style.setProperty('--k', (rnd() * 2 - 1).toFixed(2));
+    b.style.setProperty('--sc', (.72 + rnd() * .28).toFixed(2));
+    b.style.setProperty('--thread', ['#f5f3ee', '#d9cfbd', '#b9ab90'].includes(colors[ci]) ? '#c8102e' : '#f5f3ee');
+    b.setAttribute('aria-pressed', 'false');
+    b.setAttribute('aria-label', 'Bouton ' + names[ci]);
+    b.addEventListener('click', () => {
+      const on = b.classList.toggle('sewn'); b.setAttribute('aria-pressed', on);
+      const c = $$('.bt.sewn', wall).length;
+      sewCount.textContent = c + (c > 1 ? ' boutons cousus' : ' bouton cousu');
+    });
+    wall.append(b);
+  }
+  [3, 14, 29].forEach(k => wall.children[k] && wall.children[k].click());
+
+  /* Rubans */
+  const ribbonText = ['Gros-grain 25 mm', 'Satin double face 10 mm', 'Ruban vichy 15 mm', 'Galon croquet 12 mm', 'Biais replié 20 mm'];
+  const ribbons = $$('.rb');
+  ribbons.forEach((r, k) => { r.innerHTML = ('<span>' + ribbonText[k] + '</span>').repeat(16); });
+  const ribBox = $('.ribbons');
+  function updRibbons() {
+    const v = pass(ribBox);
+    ribbons.forEach((r, k) => { r.style.transform = `translate3d(${(-25 + (v - .5) * 30 * +r.dataset.dir) - (k % 2) * 8}%,0,0)`; });
+  }
+  function updButtons() { wall.style.setProperty('--spin', (scrollY * .12).toFixed(1) + 'deg'); }
+
+  /* ---------- Boucle de défilement ---------- */
+  let ticking = false;
+  function frame() { ticking = false; updTape(); updFil(); updTrame(); updRail(); updRibbons(); updButtons(); }
+  const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', () => { sizeRail(); sizeWeave(); req(); });
+  sizeRail(); sizeWeave(); frame();
+  if (document.fonts) document.fonts.ready.then(() => { sizeRail(); req(); });
+
+  /* ---------- Apparitions + ciseaux ---------- */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12, rootMargin: '0px 0px -5% 0px' });
+  $$('.rv, .cut').forEach(el => io.observe(el));
+
+  /* ---------- Horaires ---------- */
+  // shortcut : horaires de démonstration (seule l'ouverture à 09:45 est connue), à remplacer par les vrais.
+  const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+  const hm = s => { const [h, m] = s.split(':'); return h * 60 + +m; };
+  const HOURS = { 0: [], 1: [['14:00', '19:00']], 2: [['09:45', '12:30'], ['14:00', '19:00']], 3: [['09:45', '12:30'], ['14:00', '19:00']], 4: [['09:45', '12:30'], ['14:00', '19:00']], 5: [['09:45', '12:30'], ['14:00', '19:00']], 6: [['09:45', '18:00']] };
+  function status(now) {
+    const d = now.getDay(), m = now.getHours() * 60 + now.getMinutes();
+    for (const [a, b] of HOURS[d]) if (m >= hm(a) && m < hm(b)) return { open: true, txt: 'Ouvert · ferme à ' + b };
+    for (const [a] of HOURS[d]) if (m < hm(a)) return { open: false, txt: 'Fermé · ouvre à ' + a };
+    for (let k = 1; k <= 7; k++) {
+      const dd = (d + k) % 7;
+      if (HOURS[dd].length) return { open: false, txt: 'Fermé · ouvre ' + (k === 1 ? 'demain' : DAYS[dd].toLowerCase()) + ' à ' + HOURS[dd][0][0] };
+    }
+  }
+  console.assert(status(new Date(2026, 10, 3, 7, 14)).txt === 'Fermé · ouvre à 09:45', 'horaires');
+  console.assert(status(new Date(2026, 10, 3, 10, 0)).open === true, 'horaires ouvert');
+  const now = new Date(), st = status(now);
+  $$('.js-status').forEach(el => el.textContent = st.txt);
+  $$('.js-dot').forEach(el => el.classList.add(st.open ? 'open' : 'closed'));
+  const tb = $('#hours tbody');
+  [1, 2, 3, 4, 5, 6, 0].forEach(d => {
+    const tr = document.createElement('tr'); if (d === now.getDay()) tr.className = 'today';
+    tr.innerHTML = `<td>${DAYS[d]}</td><td>${HOURS[d].length ? HOURS[d].map(r => r.join('–')).join(' · ') : 'Fermé'}</td>`;
+    tb.append(tr);
+  });
+
+  /* ---------- Calculateur de métrage ---------- */
+  // Base en mètres pour une taille 38–40 en laize 140–150 cm ; [mètres, dépend de la taille]
+  const BASE = { 'jupe-droite': [0.9, 1], 'jupe-evasee': [1.6, 1], robe: [2.2, 1], chemise: [1.9, 1], pantalon: [1.5, 1], veste: [2.0, 1], coussin: [0.5, 0], rideau: [2.7, 0] };
+  const SIZE = { '34-36': .9, '38-40': 1, '42-44': 1.12, '46-48': 1.25 };
+  const meters = (p, t, l, r) => { const [b, sized] = BASE[p]; const m = b * (sized ? SIZE[t] : 1) * (l < 140 ? 1.4 : 1) * (r ? 1.15 : 1); return Math.ceil(m * 10 - 1e-9) / 10; };
+  console.assert(meters('jupe-droite', '38-40', 140, false) === 0.9, 'calc base');
+  console.assert(meters('robe', '42-44', 110, true) === 4, 'calc max');
+  console.assert(meters('coussin', '46-48', 140, false) === 0.5, 'calc sans taille');
+  const fmt = n => n.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const calc = $('#calc');
+  function updCalc() {
+    const p = $('#calcProjet').value, t = calc.taille.value, l = +calc.laize.value, r = $('#raccord').checked;
+    const m = meters(p, t, l, r);
+    $('#calcOut').innerHTML = fmt(m) + '<small>m</small>';
+    $('#miniTape').style.setProperty('--m', Math.min(4, m));
+    $('#fsTaille').disabled = !BASE[p][1];
+    $('#fsTaille').style.opacity = BASE[p][1] ? 1 : .4;
+    $('#calcHint').textContent = (BASE[p][1] ? 'Taille ' + t.replace('-', '–') + ', ' : '') + 'laize ' + (l < 140 ? '110–115' : '140–150') + ' cm' + (r ? ', raccords compris' : '') + '. Estimation indicative.';
+  }
+  calc.addEventListener('input', updCalc); calc.addEventListener('change', updCalc); updCalc();
+
+  /* ---------- Inscription arrivages (maquette : aucun envoi réel) ---------- */
+  const nl = $('#nl'), email = $('#nlEmail'), msg = $('#nlMsg');
+  nl.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!email.checkValidity()) { msg.textContent = 'Entrez une adresse e-mail complète, par exemple prenom@email.fr.'; email.focus(); return; }
+    msg.textContent = 'C\'est noté. Les prochains arrivages seront envoyés à ' + email.value + '.';
+    nl.reset();
+  });
+})();
+</script>
+</body>
+</html>
